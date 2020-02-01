@@ -22,6 +22,10 @@ flags.DEFINE_string('model_path', None, 'Path to model to freeze')
 
 flags.mark_flag_as_required('model_path')
 
+flags.DEFINE_string('save_path', None, 'Path to model to save')
+
+flags.mark_flag_as_required('save_path')
+
 flags.DEFINE_boolean(
     'use_trt', False, 'True to write a GraphDef that uses the TRT runtime')
 flags.DEFINE_integer('trt_max_batch_size', None,
@@ -39,10 +43,10 @@ FLAGS = flags.FLAGS
 def main(unused_argv):
     """Freeze a model to a GraphDef proto."""
     if FLAGS.use_tpu:
-        dual_net.freeze_graph_tpu(FLAGS.model_path)
+        dual_net.freeze_graph_tpu(FLAGS.model_path, FLAGS.save_path)
     else:
         dual_net.freeze_graph(FLAGS.model_path, FLAGS.use_trt,
-                              FLAGS.trt_max_batch_size, FLAGS.trt_precision)
+                              FLAGS.trt_max_batch_size, FLAGS.trt_precision, FLAGS.save_path)
 
 
 if __name__ == "__main__":

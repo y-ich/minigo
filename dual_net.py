@@ -693,7 +693,7 @@ def export_model(model_path):
 
 
 def freeze_graph(model_path, use_trt=False, trt_max_batch_size=8,
-                 trt_precision='fp32'):
+                 trt_precision='fp32', save_path):
     output_names = ['policy_output', 'value_output']
 
     n = DualNetwork(model_path)
@@ -714,10 +714,10 @@ def freeze_graph(model_path, use_trt=False, trt_max_batch_size=8,
         'use_trt': bool(use_trt),
     })
 
-    minigo_model.write_graph_def(out_graph, metadata, model_path + '.minigo')
+    minigo_model.write_graph_def(out_graph, metadata, save_path + '.minigo')
 
 
-def freeze_graph_tpu(model_path):
+def freeze_graph_tpu(model_path, save_path):
     """Custom freeze_graph implementation for Cloud TPU."""
 
     assert model_path
@@ -762,7 +762,7 @@ def freeze_graph_tpu(model_path):
         'num_replicas': FLAGS.num_tpu_cores,
     })
 
-    minigo_model.write_graph_def(out_graph, metadata, model_path + '.minigo')
+    minigo_model.write_graph_def(out_graph, metadata, save_path + '.minigo')
 
 
 def make_model_metadata(metadata):
