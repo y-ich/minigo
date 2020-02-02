@@ -693,7 +693,9 @@ def export_model(model_path):
 
 
 def freeze_graph(model_path, use_trt=False, trt_max_batch_size=8,
-                 trt_precision='fp32', save_path):
+                 trt_precision='fp32', save_path=None):
+    if save_path is None:
+        save_path = model_path
     output_names = ['policy_output', 'value_output']
 
     n = DualNetwork(model_path)
@@ -717,11 +719,13 @@ def freeze_graph(model_path, use_trt=False, trt_max_batch_size=8,
     minigo_model.write_graph_def(out_graph, metadata, save_path + '.minigo')
 
 
-def freeze_graph_tpu(model_path, save_path):
+def freeze_graph_tpu(model_path, save_path=None):
     """Custom freeze_graph implementation for Cloud TPU."""
 
     assert model_path
     assert FLAGS.tpu_name
+    if save_path is None:
+        save_path = model_path
     if FLAGS.tpu_name.startswith('grpc://'):
         tpu_grpc_url = FLAGS.tpu_name
     else:
